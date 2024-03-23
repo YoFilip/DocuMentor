@@ -11,7 +11,10 @@ function generateComments() {
 	for (let line of lines) {
 		const trimmedLine = line.trim();
 		if (trimmedLine) {
-			const note = generateCommentForLine(trimmedLine + ";");
+			let note = generateCommentForClass(trimmedLine);
+			if (!note) {
+				note = generateCommentForLine(trimmedLine + ";");
+			}
 			if (note) {
 				if (result) {
 					result += "\n";
@@ -47,9 +50,16 @@ function generateCommentForLine(line) {
 	return null;
 }
 
-function generateCommentForClass(line){
-	const pattern = 
-		/^(class | abstract)\s+([a-z_][a-z0-9_]*)/;
+function generateCommentForClass(line) {
+	const pattern =
+		/^(class | public |abstract|final)*\bclass\b\s+([A-Za-z_][A-Za-z0-9_]*)/;
+	const match = line.match(pattern);
+	if (match) {
+		const modifiers = match[1] ? match[1].trim() : "class";
+		const name = match[2];
+		return `/**\n * ${modifiers} klasa o nazwie ${name}\n */\n${line}`;
+	}
+	return null;
 }
 
 // Funkcja do sprawdzania zmiennych
