@@ -2,6 +2,7 @@ document
 	.querySelector(".submit-input")
 	.addEventListener("click", generateComments);
 
+// Funkcja do generowania komentarzy
 function generateComments() {
 	const code = document.getElementById("sourceCode").value;
 	const lines = code.split(/;\s*|\n/);
@@ -22,6 +23,7 @@ function generateComments() {
 	document.getElementById("output").innerHTML = result;
 }
 
+// Funkcja do parsowania zmiennych
 function generateCommentForLine(line) {
 	const pattern =
 		/^(int|String|double|float|boolean|char|byte|short|long)\s+([a-z_][a-z0-9_]*)\s*(=\s*(.*))?;$/;
@@ -45,6 +47,12 @@ function generateCommentForLine(line) {
 	return null;
 }
 
+function generateCommentForClass(line){
+	const pattern = 
+		/^(class | abstract)\s+([a-z_][a-z0-9_]*)/;
+}
+
+// Funkcja do sprawdzania zmiennych
 function validateVariable(type, value) {
 	if (["int", "double", "float", "byte", "short", "long"].includes(type)) {
 		return (
