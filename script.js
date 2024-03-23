@@ -2,6 +2,11 @@ document
 	.querySelector(".submit-input")
 	.addEventListener("click", generateComments);
 
+// document
+// 	.querySelector(".submit-input")
+// 	.addEventListener("click", helper);
+
+
 // Funkcja do generowania komentarzy
 function generateComments() {
 	const code = document.getElementById("sourceCode").value;
@@ -11,7 +16,11 @@ function generateComments() {
 	for (let line of lines) {
 		const trimmedLine = line.trim();
 		if (trimmedLine) {
-			const note = generateCommentForLine(trimmedLine + ";");
+			if(trimmedLine[trimmedLine.length - 1] === "{"){
+				var note = generateCommentForClass(trimmedLine);
+			}else{
+				var note = generateCommentForLine(trimmedLine + ";");
+			}
 			if (note) {
 				if (result) {
 					result += "\n";
@@ -22,6 +31,30 @@ function generateComments() {
 	}
 	document.getElementById("output").innerHTML = result;
 }
+
+// function generateComments() {
+// 	const code = document.getElementById("sourceCode").value;
+// 	const lines = code.split(/;\s*|\n/);
+// 	let result = "";
+
+// 	for (let line of lines) {
+// 		const trimmedLine = line.trim();
+// 		if (trimmedLine) {
+// 			let note = generateCommentForClass(trimmedLine);
+// 			if (!note) {
+//                 note = generateCommentForLine(trimmedLine + ";");
+//             }
+// 			if (note) {
+// 				if (result) {
+// 					result += "\n";
+// 				}
+// 				result += note;
+// 			}
+// 		}
+// 	}
+// 	document.getElementById("output").innerHTML = result;
+// }
+
 
 // Funkcja do parsowania zmiennych
 function generateCommentForLine(line) {
@@ -47,9 +80,17 @@ function generateCommentForLine(line) {
 	return null;
 }
 
-function generateCommentForClass(line){
-	const pattern = 
-		/^(class | abstract)\s+([a-z_][a-z0-9_]*)/;
+// Funkcja do parsowania klas
+function generateCommentForClass(line) {
+    const pattern =
+        /^(class | public |abstract|final)\bclass\b\s+([A-Za-z][A-Za-z0-9])/;
+    const match = line.match(pattern);
+    if (match) {
+        const modifiers = match[1] ? match[1].trim() : "class";
+        const name = match[2];
+        return `/**\n * ${modifiers} klasa o nazwie ${name}\n */\n${line}`;
+    }
+    return null;
 }
 
 // Funkcja do sprawdzania zmiennych
