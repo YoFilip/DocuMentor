@@ -6,7 +6,6 @@ document
 // 	.querySelector(".submit-input")
 // 	.addEventListener("click", helper);
 
-
 // Funkcja do generowania komentarzy
 function generateComments() {
 	const code = document.getElementById("sourceCode").value;
