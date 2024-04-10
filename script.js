@@ -1,4 +1,11 @@
 document.querySelector(".submit-input").addEventListener("click", generateComments);
+//Potrzebujemy:
+//Class
+//Funckji
+//Zmienne ✔
+//Konstruktory
+
+document.getElementById("sourceCode").value = "public static void nawa(int zmiennna){}";
 
 var list = {
   int: [],
@@ -38,6 +45,24 @@ function generateComments() {
 }
 
 function generateCommentForLine(line) {
+
+  // Modyfikacja wzorca, żeby dodawał komentarz Javadoc
+
+  let pattern1 = /^(public|private|protected)?\s*(static | abstract)?\s*(int|String|double|float|boolean|char|byte|short|long|void)\s+([a-zA-Z_][a-zA-Z0-9_]*)\((.*?)\)\s*.*({|;|})$/;
+  if (pattern1.test(line)) {
+    let arr = line.match(pattern1);
+    let [, visibility, modifier, returnType, functionName, params] = arr;
+    if (params) {
+      let paramsArray = params.split(',').map(param => param.trim().split(' '));
+      arr.length - 1;
+      var paramsComment = paramsArray.map(param => ` * @param ${param[0]} ${param[1]}`).join('\n');
+    }
+    return `/**\n * Zdefiniowano ${visibility ? visibility : ''} ${modifier ? modifier : ''} funkcję ${returnType} o nazwie ${functionName}\n${paramsComment}\n */`;
+  }
+
+
+
+
   const pattern = /^(int|String|double|float|boolean|char|byte|short|long)(\[\])?\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*(=\s*({[^}]*}|.*));$/;
   const match = line.match(pattern);
 
@@ -88,3 +113,5 @@ function validateVariable(type, value) {
     return false;
   }
 }
+
+
