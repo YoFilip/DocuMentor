@@ -11,7 +11,7 @@ function generateComments() {
 	for (let line of lines) {
 		const trimmedLine = line.trim();
 		if (trimmedLine) {
-			const note = generateCommentForLine(trimmedLine + ";");
+			const note = generateCommentForVariable(trimmedLine + ";");
 			if (note) {
 				if (result) {
 					result += "\n";
@@ -23,8 +23,8 @@ function generateComments() {
 	document.getElementById("output").innerHTML = result;
 }
 
-// Funkcja do parsowania zmiennych
-function generateCommentForLine(line) {
+// Funkcja do parsowania oraz do generowania komentarzy dla zmiennych
+function generateCommentForVariable(line) {
 	const pattern =
 		/^(int|String|double|float|boolean|char|byte|short|long)\s+([a-z_][a-z0-9_]*)\s*(=\s*(.*))?;$/;
 	const match = line.match(pattern);
