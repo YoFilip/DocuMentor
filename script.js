@@ -17,6 +17,8 @@ var list = {
   char: [],
 };
 
+var className = "";
+
 // Główna funkcja generująca komentarze
 function generateComments() {
 	list = {
@@ -35,8 +37,13 @@ function generateComments() {
 	let result = lines.map((line) => {
 	const trimmedLine = line.trim();
 	if (trimmedLine) {
-		const note = generateCommentForLine(trimmedLine + ";");
-		return note ? note : "";
+		if(trimmedLine[trimmedLine.length - 1] == "{"){
+			const note = generateCommentForLine(trimmedLine);
+			return note ? note : "";
+		}else{
+			const note = generateCommentForLine(trimmedLine + ";");
+			return note ? note : "";
+		}
 	}
 	return "";
 	}).join("\n");
@@ -55,7 +62,7 @@ function generateCommentForFuncs(line){
 				let paramsArray = params.split(',').map(param => param.trim().split(' '));
 				var paramsComment = paramsArray.map(param => ` * @param ${param[0]} ${param[1]}`).join('\n');
 			}
-		return `/**\n * Zdefiniowano ${visibility ? visibility : ''} ${modifier ? modifier : ''} funkcję typu: ${returnType} o nazwie ${functionName}\n${paramsComment}\n */`;
+		return `/**\n * Zdefiniowano ${visibility ? visibility + '' : ''} ${modifier ? modifier + '' : ''}funkcję typu: ${returnType} o nazwie ${functionName}\n${paramsComment}\n */`;
 	}else{
 		return null;
 	}
@@ -63,9 +70,12 @@ function generateCommentForFuncs(line){
 
 
 function generateCommentForClass(line){
-	let pattern = /^(public|final|static|abstract|class)?\s*(static | abstract |final)?\s*(class)\s*([a-zA-Z_][a-zA-Z0-9_]*).*({)$/;
+	let pattern = /^(public|final|static|abstract|class)?\s*(static | abstract |final)?\s*(class)\s*([a-zA-Z_][a-zA-Z0-9_]*)/;
 	if(pattern.test(line)){
-		return "Klasa";
+		let arr = line.match(pattern);
+		let [, modifier1, modifier2, , name] = arr;
+		className = name;
+		return `/**\n * Zdefiniowano ${modifier1 ? modifier1 + '' : ''} ${modifier2 ? modifier2 + '' : ''}klase o nazwie: ${name}\n */`;
 	}else{
 		return null;
 	}
@@ -107,7 +117,7 @@ function generateCommentsForVariables(line){
 
 // Funkcja zwracająca wygenerowane komentarze
 function generateCommentForLine(line) {
-	let checker;
+	let checker;	
 	if(checker = generateCommentForFuncs(line)){
 		return checker;
 	}else if(checker = generateCommentsForVariables(line)){
