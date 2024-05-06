@@ -2,7 +2,6 @@ document.querySelector(".submit-input").addEventListener("click", generateCommen
 //Potrzebujemy:
 //Klasy i konstruktory klas
 //Funckji
-//Zmienne ✔
 
 document.getElementById("sourceCode").value = "public static void nawa(int zmiennna){}";
 
@@ -30,8 +29,8 @@ function generateComments() {
 	String: [],
 	boolean: [],
 	char: [],
-};
-const code = document.getElementById("sourceCode").value;
+	};
+	const code = document.getElementById("sourceCode").value;
 	const lines = code.split(/;\s*|\n/);
 	let result = lines.map((line) => {
 	const trimmedLine = line.trim();
@@ -44,18 +43,29 @@ const code = document.getElementById("sourceCode").value;
 	document.getElementById("output").innerHTML = result;
 }
 
+
+
 // Funkcja do generowania komentarzy dla funkcji
 function generateCommentForFuncs(line){
-	let pattern1 = /^(public|private|protected)?\s*(static | abstract)?\s*(int|String|double|float|boolean|char|byte|short|long|void)\s+([a-zA-Z_][a-zA-Z0-9_]*)\((.*?)\)\s*.*({|;|})$/;
-		if (pattern1.test(line)) {
-			let arr = line.match(pattern1);
+	let pattern = /^(public|private|protected)?\s*(static | abstract)?\s*(int|String|double|float|boolean|char|byte|short|long|void)\s+([a-zA-Z_][a-zA-Z0-9_]*)\((.*?)\)\s*.*({|;|})$/;
+		if (pattern.test(line)) {
+			let arr = line.match(pattern);
 			let [, visibility, modifier, returnType, functionName, params] = arr;
 			if (params) {
 				let paramsArray = params.split(',').map(param => param.trim().split(' '));
-				arr.length - 1;
 				var paramsComment = paramsArray.map(param => ` * @param ${param[0]} ${param[1]}`).join('\n');
 			}
-		return `/**\n * Zdefiniowano ${visibility ? visibility : ''} ${modifier ? modifier : ''} funkcję ${returnType} o nazwie ${functionName}\n${paramsComment}\n */`;
+		return `/**\n * Zdefiniowano ${visibility ? visibility : ''} ${modifier ? modifier : ''} funkcję typu: ${returnType} o nazwie ${functionName}\n${paramsComment}\n */`;
+	}else{
+		return null;
+	}
+}
+
+
+function generateCommentForClass(line){
+	let pattern = /^(public|final|static|abstract|class)?\s*(static | abstract |final)?\s*(class)\s*([a-zA-Z_][a-zA-Z0-9_]*).*({)$/;
+	if(pattern.test(line)){
+		return "Klasa";
 	}else{
 		return null;
 	}
@@ -101,6 +111,8 @@ function generateCommentForLine(line) {
 	if(checker = generateCommentForFuncs(line)){
 		return checker;
 	}else if(checker = generateCommentsForVariables(line)){
+		return checker;
+	}else if(checker = generateCommentForClass(line)){
 		return checker;
 	}else{
 		return null;
