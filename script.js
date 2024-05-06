@@ -20,28 +20,28 @@ var list = {
 
 // Główna funkcja generująca komentarze
 function generateComments() {
-  list = {
-    int: [],
-    double: [],
-    float: [],
-    byte: [],
-    short: [],
-    long: [],
-    String: [],
-    boolean: [],
-    char: [],
-  };
-  const code = document.getElementById("sourceCode").value;
-  const lines = code.split(/;\s*|\n/);
-  let result = lines.map((line) => {
-    const trimmedLine = line.trim();
-    if (trimmedLine) {
-      const note = generateCommentForLine(trimmedLine + ";");
-      return note ? note : "";
-    }
-    return "";
-  }).join("\n");
-  document.getElementById("output").innerHTML = result;
+	list = {
+	int: [],
+	double: [],
+	float: [],
+	byte: [],
+	short: [],
+	long: [],
+	String: [],
+	boolean: [],
+	char: [],
+};
+const code = document.getElementById("sourceCode").value;
+	const lines = code.split(/;\s*|\n/);
+	let result = lines.map((line) => {
+	const trimmedLine = line.trim();
+	if (trimmedLine) {
+		const note = generateCommentForLine(trimmedLine + ";");
+		return note ? note : "";
+	}
+	return "";
+	}).join("\n");
+	document.getElementById("output").innerHTML = result;
 }
 
 // Funkcja do generowania komentarzy dla funkcji
