@@ -62,7 +62,7 @@ function generateCommentForFuncs(line){
 				let paramsArray = params.split(',').map(param => param.trim().split(' '));
 				var paramsComment = paramsArray.map(param => ` * @param ${param[0]} ${param[1]}`).join('\n');
 			}
-		return `/**\n * Zdefiniowano ${visibility ? visibility + '' : ''} ${modifier ? modifier + '' : ''}funkcję typu: ${returnType} o nazwie ${functionName}\n${paramsComment}\n */`;
+		return `/**\n * Zdefiniowano ${visibility ? visibility + '' : ''} ${modifier ? modifier : ''} funkcję typu: ${returnType} o nazwie ${functionName}\n${paramsComment}\n */`;
 	}else{
 		return null;
 	}
