@@ -1,4 +1,0 @@
-TODO:
-
--Klasy do dokończenia bo regex mnie rucha w dupe + konstruktory :);
--Funkcje (returny)
