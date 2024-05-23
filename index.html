@@ -1,29 +1,23 @@
 <!DOCTYPE html>
 <html lang="pl">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>DocuMentor</title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DocuMentor</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
+	<body>
+		<div class="editor-container">
+			<!-- <div id="editor">public static char getchar(int a){ return a; }</div> -->
 
-<body>
-  <section class="codeInput">
-    <h1>TEŻ CIĘ KOCHAM JS</h1>
-    <br />
-    <textarea class="sourceCode" id="sourceCode" name="sourceCode" placeholder="Tu możesz wkleić swój kod"></textarea>
-    <p>
-      <br>public static void nawa(int zmiennna){}<br><br>
-    </p>
-    <button type="button" class="submit-input">Generuj</button>
-  </section>
+			<!--Variables-->
+			<!-- <div id="editor">String a = "5";</div> -->
+			<div id="editor">char a = '5';</div>
+		</div>
+		<button id="generateButton">Generuj</button>
+	</body>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.5.3/ace.js"></script>
 
-  <section class="output">
-    <pre id="output"></pre>
-  </section>
-
-  <script src="script.js"></script>
-</body>
-
+	<script src="editor.js"></script>
 </html>

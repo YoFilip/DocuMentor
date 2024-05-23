@@ -1,6 +1,0 @@
-TODO:
-1.Wykminić returny
-2.Iterować kod linijka po linijce (jeżeli lini kończy się na ,,;" to idziemy w dół lini a jeżeli nie to przedłużamy o koleją)
-3.Classy
-4.Funkcje dokończyć
-5.Konstruktory
