@@ -6,23 +6,26 @@
 		<title>DocuMentor</title>
 		<link rel="stylesheet" href="style.css" />
 	</head>
+
 	<body>
-		<section class="codeInput">
-			<h1>TEŻ CIĘ KOCHAM JS</h1>
-			<br />
-			<textarea
-				class="sourceCode"
-				id="sourceCode"
-				name="sourceCode"
-				placeholder="Tu możesz wkleić swój kod"
-			></textarea>
-			<button type="button" class="submit-input">Generuj</button>
-		</section>
-
-		<section class="output">
-			<pre id="output"></pre>
-		</section>
-
-		<script src="script.js"></script>
+		<div class="editor-container">
+			<!-- <div id="editor">int x = 10;</div> -->
+			<!-- <div id="editor">double y = 20.5;</div>
+			<div id="editor">float z = 30.5f;</div> -->
+			<!-- <div id="editor">byte b = 127;</div> -->
+			<!-- <div id="editor">short s = 30000;</div> -->
+			<!-- <div id="editor">long l = 10000000000L;</div> -->
+			<!-- <div id="editor">String str = "Hello, world!";</div> -->
+			<!-- <div id="editor">boolean flag = true;</div> -->
+			<!-- <div id="editor">char c = 'A';</div> -->
+			<div id="editor">public static int add(int a, int b) { return a + b; }
+			</div>
+			<!-- <div id="editor">private static double divide(double a, double b) { return a / b; }</div> -->
+			<!-- <div id="editor">protected static void printHello() { System.out.println("Hello, world!"); }</div> -->
+		</div>
+		<button id="generateButton">Generuj</button>
 	</body>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.5.3/ace.js"></script>
+
+	<script src="editor.js"></script>
 </html>
