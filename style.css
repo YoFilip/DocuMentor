@@ -5,17 +5,17 @@
 
 	--color-one: #0d1933;
 	--color-two: #002240;
-	--color-three: #fec84a;
-	--color-four: #e6e6e6;
-	--button-color: #f6a130;
+	--color-four: #fdfdfd;
+	--button-color: #fec84a;
+	--buttonPDF-color: #fec84a;
+	--buttonReset-color: #ff5145;
 }
 
-*,
-*::before,
-*::after {
+body{
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+	background-color: var(--color-four);
 }
 
 .editor-container {
@@ -30,16 +30,22 @@
 	font-size: 20px;
 	scrollbar-color: var(--color-two);
 }
-#generateButton {
+#generateButton,#generateButtonPDF,#resetButton {
 	font-family: "Montserrat", sans-serif;
-	background-color: var(--color-three);
+	background-color: var(--button-color);
 	color: var(--black);
-	font-weight: 500;
+	font-weight: 600;
 	font-size: 1.5rem;
 	border: none;
 	width: 100%;
 	margin: 0;
 	padding: 1rem 1rem 1rem 1rem;
+}
+#generateButtonPDF{
+	background-color: var(--buttonPDF-color);
+}
+#resetButton{
+	background-color: var(--buttonReset-color);
 }
 .ace-cobalt .ace_print-margin {
 	display: none;
