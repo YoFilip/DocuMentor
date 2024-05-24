@@ -33,7 +33,7 @@ function generateCommentForFuncs(lines) {
         let params = match[5];
         let body = match[6];
         let returnLine = body.split('\n').find(line => line.trim().startsWith('return'));
-        let comment = `/**\n * Zdefiniowano ${accessModifier ? accessModifier + ' ' : ''}${otherModifier ? otherModifier + ' ' : ''}${returnType} funkcję o nazwie ${functionName}\n`;
+        let comment = `/**\n * Zdefiniowano funkcję o nazwie ${functionName}\n`;
 
         if (params) {
             let parameters = params.split(',');
@@ -47,11 +47,38 @@ function generateCommentForFuncs(lines) {
             comment += ` * @${returnLine.trim()}\n`;
         }
         comment += ` */\n${accessModifier ? accessModifier + ' ' : ''}${otherModifier ? otherModifier + ' ' : ''}${returnType} ${functionName}(${params}) {${body}}\n`;
-
+		console.log(comment);
         return comment;
     } else {
         return null;
     }
+}
+
+function generateCommentForConstructors(lines, classNames) {
+    let constructorPattern = new RegExp(`(public|protected|private)?\\s*(${classNames.join("|")})\\s*\\((.*?)\\)\\s*\\{([^}]*)\\}`, 'g');
+    let match;
+	let comment;
+    while ((match = constructorPattern.exec(lines)) !== null) {
+        let accessModifier = match[1] ? match[1].trim() : null;
+        let constructorName = match[2];
+        let params = match[3];
+        let body = match[4];
+
+        comment = `/**\n * Konstruktor dla klasy ${constructorName}\n`;
+
+        if (params) {
+            let parameters = params.split(',');
+            parameters.forEach((param) => {
+                let [type, name] = param.trim().split(' ');
+                comment += ` * @param ${type} ${name}\n`;
+            });
+        }
+
+        comment += ` */\n${accessModifier ? accessModifier + ' ' : ''}${constructorName}(${params}) {${body}}\n`;
+
+        console.log(comment);
+    }
+	return comment;
 }
 
 let editor = document.querySelector("#editor");
@@ -86,18 +113,31 @@ generateButton.addEventListener("click", function () {
     }
 
     let comments = "";
-    code = code.replace(/^\n+/, "");
-    let blocks = code.split("\n\n").filter(block => block.trim() !== "");
 
-    for (let block of blocks) {
-        let funcComment = generateCommentForFuncs(block);
-        let varComment = generateCommentForVars(block, types);
-        if (funcComment) {
-            comments += funcComment;
-        } else if (varComment) {
-            comments += varComment;
+    let blocks = code.split("\n\n");
+    blocks.forEach((block) => {
+        let classNames = [];
+        let classPattern = /class\s+(\w+)/g;
+        let classMatch;
+        while ((classMatch = classPattern.exec(block)) !== null) {
+            classNames.push(classMatch[1]);
         }
-    }
+
+        let constructorComment = generateCommentForConstructors(block, classNames);
+        if (constructorComment) {
+            comments += constructorComment;
+        } else {
+            let functionComment = generateCommentForFuncs(block);
+            if (functionComment) {
+                comments += functionComment;
+            } else {
+                let variableComment = generateCommentForVars(block, types);
+                if (variableComment) {
+                    comments += variableComment;
+                }
+            }
+        }
+    });
 
     aceEditor.setValue(comments);
 });
