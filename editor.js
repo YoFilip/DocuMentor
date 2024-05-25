@@ -1,3 +1,9 @@
+var functionPattern = /^(public|private|protected)?\s*(static|abstract)?\s*(\w+)\s+(\w+)\((.*?)\)\s*\{([^}]*)\}/g;
+
+const getConstructorPattern = className =>{
+return new RegExp(`(public|protected|private)?\\s*(${className})\\s*\\((.*?)\\)\\s*\\{([^}]*)\\}`, 'g');
+}
+
 function generateCommentForVars(line, types) {
     let regex = new RegExp(`(${types.join("|")})\\s+(\\w+)\\s*=\\s*(.*?);`, "g");
     let match = regex.exec(line);
@@ -46,8 +52,7 @@ function generateCommentForFuncs(lines) {
         if (returnLine) {
             comment += ` * @${returnLine.trim()}\n`;
         }
-        comment += ` */\n${accessModifier ? accessModifier + ' ' : ''}${otherModifier ? otherModifier + ' ' : ''}${returnType} ${functionName}(${params}) {${body}}\n`;
-		console.log(comment);
+        comment += `*/\n${accessModifier ? accessModifier + ' ' : ''}${otherModifier ? otherModifier + ' ' : ''}${returnType} ${functionName}(${params}) {${body}}\n`;
         return comment;
     } else {
         return null;
@@ -55,7 +60,7 @@ function generateCommentForFuncs(lines) {
 }
 
 function generateCommentForConstructors(lines, classNames) {
-    let constructorPattern = new RegExp(`(public|protected|private)?\\s*(${classNames.join("|")})\\s*\\((.*?)\\)\\s*\\{([^}]*)\\}`, 'g');
+    let constructorPattern = getConstructorPattern(classNames[0]);
     let match;
 	let comment;
     while ((match = constructorPattern.exec(lines)) !== null) {
@@ -64,8 +69,7 @@ function generateCommentForConstructors(lines, classNames) {
         let params = match[3];
         let body = match[4];
 
-        comment = `/**\n * Konstruktor dla klasy ${constructorName}\n`;
-
+        comment = `/**\n * Zdefiniowano ${getModifierM(accessModifier) != "" ? getModifierM(accessModifier) + " " : ""}Konstruktor dla klasy ${constructorName}\n`;
         if (params) {
             let parameters = params.split(',');
             parameters.forEach((param) => {
@@ -74,11 +78,78 @@ function generateCommentForConstructors(lines, classNames) {
             });
         }
 
-        comment += ` */\n${accessModifier ? accessModifier + ' ' : ''}${constructorName}(${params}) {${body}}\n`;
+        comment += `*/\n    ${accessModifier ? accessModifier + ' ' : ''}${constructorName}(${params}) {${body}}\n`;
 
-        console.log(comment);
     }
 	return comment;
+}
+
+function generateCommentForClass(block) {
+    let classPattern = /(public|protected|private|default|final|abstract|public abstract)?\s*class\s+(\w+)\s*\{([^}]*)}/g;
+    let classMatch = classPattern.exec(block);
+    if (classMatch) {
+        let classMod = classMatch[1];
+        let className = classMatch[2];
+        let fields = classMatch[3].split('\n');
+        let body = "";
+
+        let iter = 0;
+        while((fields[iter].charAt(fields[iter].length - 2) == ";" && fields[iter].charAt(fields[iter].length - 1) == "\r") || (fields[iter].trim() === "")){
+            if(!fields[iter].includes("abstract")){
+                body += fields[iter] + '\n';
+            }
+            ++iter;
+        }
+
+        console.log(fields[1].charAt(fields[1].length - 2) === ';');
+        console.log(fields);
+
+        return `/**\n * Zdefiniowano ${getModifierF(classMod) !== "" ? getModifierF(classMod) + " " : ""}klasę o nazwie ${className}\n */\n${block.split("\n")[0]}\n${body}`;
+    } else {
+        return null;
+    }
+}
+    
+function getModifierF(mod){
+    switch(mod){
+        case "private":
+            return "prywatną";
+        case "public":
+            return "publiczną";
+        case "abstract":
+            return "abstrakcyjną";
+        case "final":
+            return "finalną";
+        case "protected":
+            return "chronioną";
+        case "default":
+            return "podstawową";
+        case "public abstract":
+            return "publiczną abstrakcyjną";
+        default:
+            return "";
+    }
+}
+
+function getModifierM(mod){
+     switch(mod){
+        case "private":
+            return "prywatny";
+        case "public":
+            return "publiczny";
+        case "abstract":
+            return "abstrakcjyny";
+        case "final":
+            return "finalny";
+        case "protected":
+            return "chroniony";
+        case "default":
+            return "podstawowy";
+        case "public abstract":
+            return "publiczny abstrakcyjny";
+        default:
+            return "";
+    }
 }
 
 let editor = document.querySelector("#editor");
@@ -108,7 +179,7 @@ generateButton.addEventListener("click", function () {
         "char",
     ];
 
-    if (code.includes("Zdefiniowano")) {
+    if (code.includes("/**")) {
         return;
     }
 
@@ -122,7 +193,11 @@ generateButton.addEventListener("click", function () {
         while ((classMatch = classPattern.exec(block)) !== null) {
             classNames.push(classMatch[1]);
         }
-
+        let classComment = generateCommentForClass(block);
+        console.log(classComment)
+        if (classComment) {
+            comments += classComment + "\n";
+        }
         let constructorComment = generateCommentForConstructors(block, classNames);
         if (classNames.length !== 0) {
             comments += constructorComment;
@@ -138,6 +213,8 @@ generateButton.addEventListener("click", function () {
             }
         }
     });
+
+    comments += "\n}";
 
     aceEditor.setValue(comments);
 });
