@@ -124,7 +124,7 @@ generateButton.addEventListener("click", function () {
         }
 
         let constructorComment = generateCommentForConstructors(block, classNames);
-        if (constructorComment) {
+        if (classNames.length !== 0) {
             comments += constructorComment;
         } else {
             let functionComment = generateCommentForFuncs(block);
