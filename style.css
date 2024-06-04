@@ -11,7 +11,7 @@
 	--buttonReset-color: #ff5145;
 }
 
-body{
+body {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
@@ -30,7 +30,10 @@ body{
 	font-size: 20px;
 	scrollbar-color: var(--color-two);
 }
-#generateButton,#generateButtonPDF,#resetButton {
+#generateButton,
+#generateButtonPDF,
+#resetButton,
+#generateAVButton {
 	font-family: "Montserrat", sans-serif;
 	background-color: var(--button-color);
 	color: var(--black);
@@ -41,12 +44,31 @@ body{
 	margin: 0;
 	padding: 1rem 1rem 1rem 1rem;
 }
-#generateButtonPDF{
+#generateButtonPDF,
+#generateAVButton {
 	background-color: var(--buttonPDF-color);
 }
-#resetButton{
+#resetButton {
 	background-color: var(--buttonReset-color);
 }
+#authorInput,
+#versionInput {
+	width: 100%;
+	border: none;
+	padding: 20px;
+}
+#authorInput,
+#versionInput {
+	border: 1px dashed var(--black);
+}
+#versionInput {
+	border-top: none;
+}
+#authorInput:focus,
+#versionInput:focus {
+	outline: none;
+}
+
 .ace-cobalt .ace_print-margin {
 	display: none;
 }

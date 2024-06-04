@@ -9,29 +9,16 @@
 
 	<body>
 		<div class="editor-container">
-			<!-- <div id="editor">int x = 10;</div> -->
-			<!-- <div id="editor">double y = 20.5;</div>
-			<div id="editor">float z = 30.5f;</div> -->
-			<!-- <div id="editor">byte b = 127;</div> -->
-			<!-- <div id="editor">short s = 30000;</div> -->
-			<!-- <div id="editor">long l = 10000000000L;</div> -->
-			<!-- <div id="editor">String str = "Hello, world!";</div> -->
-			<!-- <div id="editor">boolean flag = true;</div> -->
-			<!-- <div id="editor">char c = 'A';</div> -->
-			<!-- <div id="editor">public static int add(int a, int b) { return a + b; }
-			</div> -->
-			<div id="editor">private static double name(double a, double b) { return a / b; }</div>
-			<!-- <div id="editor">public MyClass(int x, String y) {
-				x = this.x;
-				y = this.y;
-			}</div> -->
-			<!-- <div id="editor">protected static void printHello() { System.out.println("Hello, world!"); }</div> -->
+			<div id="editor">int a = 5;</div>
 		</div>
-		<button id="generateButton">Generuj komentarze</button>
+		<div class="input-container">
+			<input type="text" id="authorInput" placeholder="Wprowadź autora" />
+			<input type="text" id="versionInput" placeholder="Wprowadź wersję" />
+			<button id="generateButton">Generuj komentarze</button>
+		</div>
 		<button id="generateButtonPDF">Generuj plik PDF</button>
 		<button id="resetButton">Reset</button>
 	</body>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.5.3/ace.js"></script>
-
 	<script src="editor.js"></script>
 </html>
