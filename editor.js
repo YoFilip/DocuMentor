@@ -85,26 +85,33 @@ function generateCommentForConstructors(lines, classNames) {
 }
 
 function generateCommentForClass(block) {
-    let classPattern = /(public|protected|private|default|final|abstract|public abstract)?\s*class\s+(\w+)\s*\{([^}]*)}/g;
+    let classPattern = /(public|protected|private|default|final|abstract|public abstract)?\s*class\s+(\w+)\s*\{([^}]*)/g;
     let classMatch = classPattern.exec(block);
     if (classMatch) {
         let classMod = classMatch[1];
         let className = classMatch[2];
         let fields = classMatch[3].split('\n');
         let body = "";
+        let switcher = false;
 
-        let iter = 0;
-        while((fields[iter].charAt(fields[iter].length - 1) == ";") || (fields[iter].trim() === "")){
-            if(!fields[iter].includes("abstract")){
-                body += fields[iter] + '\n';
+        fields.forEach(element => {
+            if(/[a-zA-Z]/.test(element)){
+                switcher = true;
             }
-            ++iter;
+        });
+        if(switcher){
+            let iter = 0;
+            while((fields[iter].charAt(fields[iter].length - 1) == ";") || (fields[iter].trim() === "")){
+                if(!fields[iter].includes("abstract")){
+                    body += fields[iter] + '\n';
+                }
+                ++iter;
+            }
+            console.log(body)
+            return `/**\n * Zdefiniowano ${getModifierF(classMod) !== "" ? getModifierF(classMod) + " " : ""}klasę o nazwie ${className}\n */\n${block.split("\n")[0]}\n${body}`;
+        }else{
+            return null;
         }
-
-        console.log(fields[1].charAt(fields[1].length - 2) === ';');
-        console.log(fields);
-
-        return `/**\n * Zdefiniowano ${getModifierF(classMod) !== "" ? getModifierF(classMod) + " " : ""}klasę o nazwie ${className}\n */\n${block.split("\n")[0]}\n${body}`;
     } else {
         return null;
     }
@@ -194,24 +201,24 @@ generateButton.addEventListener("click", function () {
             classNames.push(classMatch[1]);
         }
         let classComment = generateCommentForClass(block);
-        console.log(classComment)
         if (classComment) {
             comments += classComment + "\n";
         }
-        let constructorComment = generateCommentForConstructors(block, classNames);
-        if (classNames.length !== 0) {
-            comments += constructorComment;
-        } else {
-            let functionComment = generateCommentForFuncs(block);
-            if (functionComment) {
-                comments += functionComment;
+            if (classNames.length !== 0) {
+                let constructorComment = generateCommentForConstructors(block, classNames);
+                if(constructorComment)
+                    comments += constructorComment;
             } else {
-                let variableComment = generateCommentForVars(block, types);
-                if (variableComment) {
-                    comments += variableComment;
+                let functionComment = generateCommentForFuncs(block);
+                if (functionComment) {
+                    comments += functionComment;
+                } else {
+                    let variableComment = generateCommentForVars(block, types);
+                    if (variableComment) {
+                        comments += variableComment;
+                    }
                 }
             }
-        }
     });
 
     comments += "\n}";
