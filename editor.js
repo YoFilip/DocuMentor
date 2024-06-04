@@ -94,7 +94,7 @@ function generateCommentForClass(block) {
         let body = "";
 
         let iter = 0;
-        while((fields[iter].charAt(fields[iter].length - 2) == ";" && fields[iter].charAt(fields[iter].length - 1) == "\r") || (fields[iter].trim() === "")){
+        while((fields[iter].charAt(fields[iter].length - 1) == ";") || (fields[iter].trim() === "")){
             if(!fields[iter].includes("abstract")){
                 body += fields[iter] + '\n';
             }
@@ -132,7 +132,7 @@ function getModifierF(mod){
 }
 
 function getModifierM(mod){
-     switch(mod){
+    switch(mod){
         case "private":
             return "prywatny";
         case "public":
