@@ -29,6 +29,8 @@ resetButton.addEventListener("click", function () {
 function addAuthorAndVersion() {
 	let author = authorInput.value;
 	let version = versionInput.value;
+    if(author === "" || version === "")
+        return;
 	let code = aceEditor.getValue();
 	let comment = `/**\n * @author: ${author}\n * @version: ${version}\n*/\n`;
 	aceEditor.setValue(comment + code);
@@ -61,28 +63,27 @@ generateButton.addEventListener("click", function () {
 			classNames.push(classMatch[1]);
 		}
 		let classComment = generateCommentForClass(block);
-		console.log(classComment);
 		if (classComment) {
 			comments += classComment + "\n";
 		}
-		let constructorComment = generateCommentForConstructors(block, classNames);
+        let variableComment = generateCommentForVars(block, types);
+        if (variableComment) {
+            comments += variableComment;
+        }
 		if (classNames.length !== 0) {
-			comments += constructorComment;
-		} else {
-			let functionComment = generateCommentForFuncs(block);
-			if (functionComment) {
-				comments += functionComment;
-			} else {
-				let variableComment = generateCommentForVars(block, types);
-				if (variableComment) {
-					comments += variableComment;
-				}
-			}
-		}
+            let constructorComment = generateCommentForConstructors(block, classNames);
+            if(constructorComment)
+                comments += constructorComment;
+        }
+        let functionComment = generateCommentForFuncs(block);
+        if (functionComment) {
+            comments += functionComment;
+        }
 	});
 
 	aceEditor.setValue(comments);
 	addAuthorAndVersion();
+    aceEditor.setValue(aceEditor.getValue() + '\n}')
 });
 var functionPattern =
 	/^(public|private|protected)?\s*(static|abstract)?\s*(\w+)\s+(\w+)\((.*?)\)\s*\{([^}]*)\}/g;
@@ -193,21 +194,26 @@ function generateCommentForClass(block) {
 		let className = classMatch[2];
 		let fields = classMatch[3].split("\n");
 		let body = "";
+        let fieldCheckerArr = [];
+        let fieldIter = 0;
+        fields.forEach(elm=>{
+            ++fieldIter
+            if(/[a-zA-Z]/.test(elm) && elm !== "" && elm !== '\r'){
+                fieldCheckerArr[fieldIter] = true;
+            }
+        });
 
-		let iter = 0;
-		while (
-			(fields[iter].charAt(fields[iter].length - 2) == ";" &&
-				fields[iter].charAt(fields[iter].length - 1) == "\r") ||
-			fields[iter].trim() === ""
-		) {
-			if (!fields[iter].includes("abstract")) {
-				body += fields[iter] + "\n";
-			}
-			++iter;
-		}
-
-		console.log(fields[1].charAt(fields[1].length - 2) === ";");
-		console.log(fields);
+        let iter = 0;
+        for(var i = 0; i < fieldCheckerArr.length; ++i){
+            if(fieldCheckerArr[i]){
+                while(fields[iter].charAt(fields[iter].length - 2) == ";" || fields[iter].trim() === "") {
+                    if (!fields[iter].includes("abstract") && fields[iter].trim() !== "") {
+                        body += fields[iter] + "\n";
+                    }
+                    ++iter;
+                }
+            }
+        }
 
 		return `/**\n * Zdefiniowano ${
 			getModifierF(classMod) !== "" ? getModifierF(classMod) + " " : ""
