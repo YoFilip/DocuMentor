@@ -6,23 +6,19 @@
 		<title>DocuMentor</title>
 		<link rel="stylesheet" href="style.css" />
 	</head>
+
 	<body>
-		<section class="codeInput">
-			<h1>TEŻ CIĘ KOCHAM JS</h1>
-			<br />
-			<textarea
-				class="sourceCode"
-				id="sourceCode"
-				name="sourceCode"
-				placeholder="Tu możesz wklejić swój kod"
-			></textarea>
-			<button type="button" class="submit-input">Generuj</button>
-		</section>
-
-		<section class="output">
-			<pre id="output"></pre>
-		</section>
-
-		<script src="script.js"></script>
+		<div class="editor-container">
+			<div id="editor">int a = 5;</div>
+		</div>
+		<div class="input-container">
+			<input type="text" id="authorInput" placeholder="Wprowadź autora" />
+			<input type="text" id="versionInput" placeholder="Wprowadź wersję" />
+			<button id="generateButton">Generuj komentarze</button>
+		</div>
+		<button id="generateButtonPDF">Generuj plik PDF</button>
+		<button id="resetButton">Reset</button>
 	</body>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.5.3/ace.js"></script>
+	<script src="editor.js"></script>
 </html>
